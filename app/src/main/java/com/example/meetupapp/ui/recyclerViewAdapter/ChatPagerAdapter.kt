@@ -3,13 +3,16 @@ package com.example.meetupapp.ui.recyclerViewAdapter
 import android.graphics.Color
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.meetup.pojo.ChatUi
+import com.example.meetupapp.pojo.ChatUi
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemChatBinding
+import com.example.meetupapp.pojo.ContactUi
+import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragment
+import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragmentDirections
 
 class ChatPagerAdapter(
     private val items: MutableList<ChatUi>,
@@ -48,7 +51,7 @@ class ChatPagerAdapter(
             }
 
             itemRV.setOnClickListener {
-                doActionOrClickedItem(it, holder)
+                doActionAfterClickedItem(it, position)
             }
 
             whenAllSelectClicked()
@@ -63,12 +66,12 @@ class ChatPagerAdapter(
         lastMessage.text = items[position].lastMessage
     }
 
-    private fun MyViewHolder.doActionOrClickedItem(
+    private fun MyViewHolder.doActionAfterClickedItem(
         view: View,
-        holder: MyViewHolder
+        position: Int
     ) {
         if (!isTopBarEnable) {
-            someOtherAction(view, holder)
+            openChat(view, position)
         } else {
             clickItem()
         }
@@ -119,15 +122,20 @@ class ChatPagerAdapter(
         }
     }
 
-    private fun someOtherAction(
+    private fun openChat(
         view: View,
-        holder: MyViewHolder
+        position: Int
     ) {
-        Toast.makeText(
-            view.context,
-            "You clicked ${items[holder.adapterPosition]}",
-            Toast.LENGTH_SHORT
-        ).show()
+
+        with(items[position]) {
+            val contact = ContactUi(
+                id = this.fullName
+            )
+
+            view.findNavController()
+                .navigate(ChatAndMeetingFragmentDirections.toChatFragment(contact))
+        }
+
     }
 
     private fun getContextualCallback(holder: MyViewHolder): androidx.appcompat.view.ActionMode.Callback =

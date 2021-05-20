@@ -13,7 +13,7 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatBinding
 import com.example.meetupapp.pojo.MessageUi
 import com.example.meetupapp.pojo.UserModel
-import com.example.meetupapp.ui.recyclerViewAdapter.ChatAdapter
+import com.example.meetupapp.ui.recyclerViewAdapter.MessagesAdapter
 import com.example.meetupapp.util.extensions.getDataModel
 import com.example.meetupapp.util.extensions.sendMessage
 import com.example.meetupapp.util.firebase.AppValueEventListener
@@ -77,7 +77,7 @@ class ChatFragment : Fragment() {
         CURRENT_UID?.let { currentId ->
             val recycler = binding.messagesRecyclerView
             setLayoutManager(recycler)
-            val adapter = ChatAdapter()
+            val adapter = MessagesAdapter()
             recycler.adapter = adapter
 
             val contactId = args.contactArg.id

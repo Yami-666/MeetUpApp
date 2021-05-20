@@ -1,6 +1,6 @@
-package com.example.meetup.pojo
+package com.example.meetupapp.pojo
 
 data class ChatUi(
-    val fullName: String,
-    val lastMessage: String,
+    var fullName: String = "",
+    var lastMessage: String = "",
 )

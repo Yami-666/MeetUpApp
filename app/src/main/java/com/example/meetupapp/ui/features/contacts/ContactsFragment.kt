@@ -92,7 +92,7 @@ class ContactsFragment : Fragment() {
                 dataSnapshot2?.let { data ->
                     val userId = data.getDataModel<ContactUi>()
                     val refDatabase =
-                        FirebaseProvider.referenceDatabase.child(NODE_USERS).child(userId?.id.orEmpty())
+                        FirebaseProvider.referenceDatabase.child(NODE_USERS).child(userId.id)
                     val contactsListener = getContactValueListener()
 
                     mapListener[refDatabase] = contactsListener

@@ -1,21 +1,17 @@
 package com.example.meetupapp.ui.recyclerViewAdapter
 
 import android.view.*
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meetupapp.R
-import com.example.meetupapp.databinding.ItemChatBinding
 import com.example.meetupapp.databinding.ItemMessageBinding
 import com.example.meetupapp.pojo.MessageUi
 import com.example.meetupapp.util.extensions.setHide
 import com.example.meetupapp.util.extensions.setVisibility
 import com.example.meetupapp.util.extensions.toTimeHHmmFormat
-import com.example.meetupapp.util.firebase.FirebaseProvider
 import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
 
-class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
+class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MyViewHolder>() {
 
     private var messagesCache = emptyList<MessageUi>()
 
