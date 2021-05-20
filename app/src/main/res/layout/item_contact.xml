@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/itemRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/avatarImage"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/circe"
+            android:contentDescription="@string/chat_avatar"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textContactName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:text="@string/some_name"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="false"
+            app:layout_constraintEnd_toStartOf="@+id/checked"
+            app:layout_constraintStart_toEndOf="@+id/avatarImage"
+            app:layout_constraintTop_toTopOf="@+id/avatarImage" />
+
+        <TextView
+            android:id="@+id/textPhoneNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/some_phone_number"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:singleLine="false"
+            app:layout_constraintEnd_toEndOf="@+id/textContactName"
+            app:layout_constraintStart_toStartOf="@+id/textContactName"
+            app:layout_constraintTop_toBottomOf="@+id/textContactName" />
+
+        <ImageView
+            android:id="@+id/checked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_check_24"
+            app:layout_constraintBottom_toBottomOf="@+id/textPhoneNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/textContactName" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.9" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,11 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:innerRadius="0dp"
+    android:shape="oval"
+    android:thicknessRatio="1.9"
+    android:useLevel="false" >
+    <solid android:color="@android:color/transparent" />
+
+    <solid
+        android:width="4dp"
+        android:color="@color/design_default_color_primary_variant" />
+</shape>
