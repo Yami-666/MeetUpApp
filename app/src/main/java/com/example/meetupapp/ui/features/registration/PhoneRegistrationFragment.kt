@@ -1,8 +1,16 @@
 package com.example.meetupapp.ui.features.registration
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
+import android.widget.CalendarView
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -11,6 +19,7 @@ import com.example.meetupapp.pojo.UserRegistration
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentPhoneRegistrationBinding
 import com.example.meetupapp.util.extensions.hide
+import com.example.meetupapp.util.extensions.setVisibility
 import com.example.meetupapp.util.extensions.show
 import com.example.meetupapp.util.extensions.showToast
 import com.example.meetupapp.util.firebase.FirebaseProvider
@@ -19,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PhoneRegistrationFragment : Fragment() {
@@ -40,11 +50,35 @@ class PhoneRegistrationFragment : Fragment() {
         phoneCallBack = getPhoneCallBack(binding)
 
         binding.fabRegistrationPhoneNumber.setOnClickListener {
-            val enteredPhone = binding.editTextPhoneNumber.text.toString()
-            binding.progressBar.show()
-            sendCode(enteredPhone)
+            val phoneNumber: String = binding.editTextPhoneNumber.text.toString()
+            if (phoneNumber.isNotEmpty()) {
+                binding.progressBar.setVisibility()
+                verifyPhone(phoneNumber)
+            } else {
+                showErrorMessage(binding)
+            }
         }
+
+        hideErrorMessage(binding)
+
         return binding.root
+    }
+
+    private fun hideErrorMessage(binding: FragmentPhoneRegistrationBinding) {
+        binding.editTextPhoneNumber.addTextChangedListener {
+            if (binding.layoutTextPhoneNumber.isErrorEnabled) {
+                binding.layoutTextPhoneNumber.isErrorEnabled = false
+            }
+        }
+    }
+
+    private fun verifyPhone(enteredPhone: String) {
+        sendCode(enteredPhone)
+    }
+
+    private fun showErrorMessage(binding: FragmentPhoneRegistrationBinding) {
+        binding.layoutTextPhoneNumber.error = "Введите номер телефона"
+        binding.layoutTextPhoneNumber.isErrorEnabled = true
     }
 
     private fun sendCode(enteredPhone: String) {
@@ -104,4 +138,5 @@ class PhoneRegistrationFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.top_bar_menu, menu)
     }
+
 }

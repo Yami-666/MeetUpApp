@@ -1,20 +1,25 @@
 package com.example.meetupapp.ui.features.chat
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatBinding
 import com.example.meetupapp.pojo.MessageUi
 import com.example.meetupapp.pojo.UserModel
+import com.example.meetupapp.pojo.enum.MeetingStatus
 import com.example.meetupapp.ui.recyclerViewAdapter.MessagesAdapter
 import com.example.meetupapp.util.extensions.getDataModel
+import com.example.meetupapp.util.extensions.sendMeetingMessage
 import com.example.meetupapp.util.extensions.sendMessage
 import com.example.meetupapp.util.firebase.AppValueEventListener
 import com.example.meetupapp.util.firebase.FirebaseProvider
@@ -22,13 +27,25 @@ import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
 import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MESSAGES
 import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
 import com.example.meetupapp.util.firebase.FirebaseProvider.TYPE_TEXT
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.database.DatabaseReference
+import java.util.*
 
 class ChatFragment : Fragment() {
     private lateinit var listenerInfoToolBar: AppValueEventListener
     private lateinit var refUser: DatabaseReference
     private lateinit var messagesListener: AppValueEventListener
     private lateinit var binding: FragmentChatBinding
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    // TODO: 22.05.2021 Убрать
+    private var date = ""
+    private var hour = 0
+    private var minute = 0
+
     private val args: ChatFragmentArgs by navArgs()
 
     override fun onResume() {
@@ -65,15 +82,77 @@ class ChatFragment : Fragment() {
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_chat, container, false)
         binding.userName.text = args.contactArg.nickname
+
         initTopBarBackListener()
-        initRecyclerView(binding)
+        initRecyclerView()
         initSendMessageListener()
-
-
+        initMeetingBottomSheet()
+        initPickTime()
+        initPickDate()
+        initSendMeeting()
         return binding.root
     }
 
-    private fun initRecyclerView(binding: FragmentChatBinding) {
+    // TODO: 22.05.2021 Вынести в отдельный класс времени
+    private fun initPickTime() =
+        binding.imageAddTime.setOnClickListener {
+            showTimePicker()
+        }
+
+    private fun showTimePicker() {
+        val timePicker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setTitleText("Введите время встречи")
+            .build()
+
+        timePicker.show(parentFragmentManager, "timePicker")
+
+        timePicker.addOnPositiveButtonClickListener {
+            hour = timePicker.hour
+            minute = timePicker.minute
+            Log.e("TAG", hour.toString())
+            Log.e("TAG", minute.toString())
+        }
+    }
+
+
+    // TODO: 22.05.2021 Вынести в отдельный метод даты
+    private fun initPickDate() =
+        binding.imageOpenCalendar.setOnClickListener {
+            showDatePicker()
+        }
+
+    private fun showDatePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Введите дату встречи")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+        datePicker.show(parentFragmentManager, "datePicker")
+
+        datePicker.addOnPositiveButtonClickListener {
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+3"))
+            calendar.time = Date(it)
+            date = "${calendar.get(Calendar.DAY_OF_MONTH)}-" +
+                    "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+            Log.e("TAG", date)
+        }
+    }
+
+
+    private fun initMeetingBottomSheet() {
+        val bottomSheetContent: ConstraintLayout = binding.bottomSheetContent
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContent).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.imageCloseBottomSheet.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.createMeeting.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun initRecyclerView() {
         CURRENT_UID?.let { currentId ->
             val recycler = binding.messagesRecyclerView
             setLayoutManager(recycler)
@@ -111,6 +190,25 @@ class ChatFragment : Fragment() {
         }
     }
 
+    private fun initSendMeeting() {
+        with (binding) {
+            addMeeting.setOnClickListener {
+                val meetingName = textInputNameMeeting.text.toString()
+                val address = textInputAddress.text.toString()
+                val time = "$hour-$minute"
+                val addedMeeting = MeetingParams(
+                    name = meetingName,
+                    address = address,
+                    date = date,
+                    time = time,
+                    status = "in progress"
+                )
+                sendMeetingMessage(addedMeeting, args.contactArg.id) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+        }
+    }
 
     private fun initTopBarBackListener() {
         binding.topAppBar.setNavigationOnClickListener {

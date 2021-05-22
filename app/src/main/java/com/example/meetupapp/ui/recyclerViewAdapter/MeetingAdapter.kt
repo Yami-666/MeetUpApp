@@ -7,25 +7,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.meetup.pojo.MeetingUi
+import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemMeetingBinding
 
 class MeetingAdapter(
-    private val items: MutableList<MeetingUi>,
+    private val items: MutableList<MeetingParams>,
     private val activity: AppCompatActivity,
     private val textView: TextView
 ) : RecyclerView.Adapter<MeetingAdapter.MyViewHolder>() {
 
     private var isTopBarEnable: Boolean = false
     private var isSelectedAll: Boolean = false
-    private var selectedItems: MutableList<MeetingUi> = mutableListOf()
+    private var selectedItems: MutableList<MeetingParams> = mutableListOf()
     private var actionMode: androidx.appcompat.view.ActionMode? = null
 
     inner class MyViewHolder(itemBinding: ItemMeetingBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-        val meetingName = itemBinding.textMeetingName
+        val meetingName = itemBinding.meetingNameLayout
         val dateAndTime = itemBinding.textDateTime
         val itemRV = itemBinding.itemMeeting
         val check = itemBinding.checked
@@ -60,7 +60,7 @@ class MeetingAdapter(
         position: Int
     ) {
         meetingName.text = items[position].name
-        dateAndTime.text = items[position].dateAndTime
+        dateAndTime.text = items[position].date
     }
 
     private fun MyViewHolder.doActionOrClickedItem(

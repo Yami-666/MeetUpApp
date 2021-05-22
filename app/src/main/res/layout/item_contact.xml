@@ -64,11 +64,11 @@
             android:src="@drawable/ic_check_24"
             app:layout_constraintBottom_toBottomOf="@+id/textPhoneNumber"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/guidelineAddMessage"
             app:layout_constraintTop_toTopOf="@+id/textContactName" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/guidelineAddMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

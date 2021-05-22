@@ -1,12 +1,20 @@
 package com.example.meetupapp.util.extensions
 
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.meetupapp.pojo.MeetingParams
+import com.example.meetupapp.util.Constants.EMPTY_STRING
 import com.example.meetupapp.util.firebase.FirebaseProvider
+import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_ADDRESS
+import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_DATE
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_FROM
+import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_NAME
+import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_STATUS
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TEXT
+import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TIME
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TIMESTAMP
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TO
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TYPE
@@ -51,15 +59,20 @@ fun View.setHide() {
 }
 
 fun String.toTimeHHmmFormat(): String {
-    val time = Date(this.toLong())
-    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    return timeFormat.format(time)
+    return try {
+        val time = Date(this.toLong())
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        timeFormat.format(time)
+    } catch (e: Exception) {
+        Log.e("toTimeHHmmFormat", "toTimeHHmmFormat(): ${e.message}")
+        EMPTY_STRING
+    }
 }
 
 fun sendMessage(
     message: String,
     receivingUserId: String,
-    typeText: String,
+    typeMessage: String,
     doAfterCompleteSend: () -> Unit
 ) {
     CURRENT_UID?.let { currentUserId ->
@@ -71,7 +84,7 @@ fun sendMessage(
 
         mapMessage[CHILD_FROM] = currentUserId
         mapMessage[CHILD_TO] = receivingUserId
-        mapMessage[CHILD_TYPE] = typeText
+        mapMessage[CHILD_TYPE] = typeMessage
         mapMessage[CHILD_TEXT] = message
         mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
 
@@ -83,6 +96,39 @@ fun sendMessage(
             .updateChildren(mapDialog)
             .addOnCompleteListener { doAfterCompleteSend() }
     }.orIfNull {
+        // TODO: 22.05.2021 Добавить лог
+    }
+}
 
+
+fun sendMeetingMessage(
+    meetingMessage: MeetingParams,
+    receivingUserId: String,
+    doAfterCompleteSend: () -> Unit
+) {
+    CURRENT_UID?.let { currentUserId ->
+        val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
+        val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
+
+        val messageKey = FirebaseProvider.referenceDatabase.child(refDialogUser).push().key
+        val mapMessage = HashMap<String, Any>()
+
+        mapMessage[CHILD_NAME] = meetingMessage.name
+        mapMessage[CHILD_DATE] = meetingMessage.date
+        mapMessage[CHILD_TIME] = meetingMessage.time
+        mapMessage[CHILD_ADDRESS] = meetingMessage.address
+        mapMessage[CHILD_FROM] = currentUserId
+        mapMessage[CHILD_TO] = receivingUserId
+        mapMessage[CHILD_STATUS] = meetingMessage.status
+
+        val mapDialog = HashMap<String, Any>()
+        mapDialog["$refDialogUser/$messageKey"] = mapMessage
+        mapDialog["$refDialogReceivingUser/$messageKey"] = mapMessage
+
+        FirebaseProvider.referenceDatabase
+            .updateChildren(mapDialog)
+            .addOnCompleteListener { doAfterCompleteSend() }
+    }.orIfNull {
+        // TODO: 22.05.2021 Добавить лог
     }
 }

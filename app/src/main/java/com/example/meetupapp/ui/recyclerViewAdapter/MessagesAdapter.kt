@@ -1,6 +1,7 @@
 package com.example.meetupapp.ui.recyclerViewAdapter
 
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meetupapp.R

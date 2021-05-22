@@ -12,10 +12,16 @@ object FirebaseProvider {
     const val CHILD_ID = "id"
     const val CHILD_PHONE = "phone"
     const val CHILD_NICKNAME = "nickname"
+    const val CHILD_NAME = "name"
+    const val CHILD_DATE = "date"
+    const val CHILD_TIME = "time"
+    const val CHILD_ADDRESS = "address"
+    const val CHILD_STATUS = "status"
     const val CHILD_STATE = "state"
 
     // Message
     const val CHILD_TEXT = "text"
+    const val CHILD_MEETING = "meeting"
     const val CHILD_TYPE = "type"
     const val CHILD_FROM = "from"
     const val CHILD_TO = "to"

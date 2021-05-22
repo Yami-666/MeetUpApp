@@ -26,7 +26,7 @@
             android:contentDescription="@string/meeting_avatar" />
 
         <TextView
-            android:id="@+id/textMeetingName"
+            android:id="@+id/meetingNameLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -53,9 +53,9 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:singleLine="false"
-            app:layout_constraintEnd_toEndOf="@+id/textMeetingName"
-            app:layout_constraintStart_toStartOf="@+id/textMeetingName"
-            app:layout_constraintTop_toBottomOf="@+id/textMeetingName" />
+            app:layout_constraintEnd_toEndOf="@+id/meetingNameLayout"
+            app:layout_constraintStart_toStartOf="@+id/meetingNameLayout"
+            app:layout_constraintTop_toBottomOf="@+id/meetingNameLayout" />
 
         <ImageView
             android:id="@+id/checked"
@@ -65,7 +65,7 @@
             android:src="@drawable/ic_check_24"
             app:layout_constraintBottom_toBottomOf="@+id/textDateTime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textMeetingName"
+            app:layout_constraintTop_toTopOf="@+id/meetingNameLayout"
             android:contentDescription="@string/check_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

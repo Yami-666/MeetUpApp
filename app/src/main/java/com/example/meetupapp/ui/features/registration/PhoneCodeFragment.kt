@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -12,6 +13,8 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentPhoneCodeBinding
 import com.example.meetupapp.pojo.enum.UserStatus
 import com.example.meetupapp.util.extensions.hide
+import com.example.meetupapp.util.extensions.setVisibility
+import com.example.meetupapp.util.extensions.showToast
 import com.example.meetupapp.util.firebase.FirebaseProvider
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_ID
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_NICKNAME
@@ -21,8 +24,6 @@ import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
 import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_PHONES
 import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
 import com.example.meetupapp.util.firebase.FirebaseProvider.authFirebase
-import com.example.meetupapp.util.extensions.show
-import com.example.meetupapp.util.extensions.showToast
 import com.google.firebase.auth.PhoneAuthProvider
 
 class PhoneCodeFragment : Fragment() {
@@ -37,12 +38,33 @@ class PhoneCodeFragment : Fragment() {
     ): View {
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_phone_code, container, false)
-
-        binding.fabEnterPhoneCode.setOnClickListener {
-            binding.progressBarPhoneCode.show()
-            enterCode(binding)
+        binding.apply {
+            fabEnterPhoneCode.setOnClickListener {
+                val phoneNumber: String = editTextPhoneCode.text.toString()
+                if (phoneNumber.isNotEmpty()) {
+                    binding.progressBarPhoneCode.setVisibility()
+                    enterCode(this)
+                } else {
+                    showErrorMessage(this)
+                }
+            }
+            initHideErrorListener(this)
         }
+
         return binding.root
+    }
+
+    private fun initHideErrorListener(binding: FragmentPhoneCodeBinding) {
+        binding.editTextPhoneCode.addTextChangedListener {
+            if (binding.layoutTextPhoneCode.isErrorEnabled) {
+                binding.layoutTextPhoneCode.isErrorEnabled = false
+            }
+        }
+    }
+
+    private fun showErrorMessage(binding: FragmentPhoneCodeBinding) {
+        binding.layoutTextPhoneCode.error = "Неверный код"
+        binding.layoutTextPhoneCode.isErrorEnabled = true
     }
 
     private fun enterCode(binding: FragmentPhoneCodeBinding) {

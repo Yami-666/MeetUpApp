@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.meetup.pojo.MeetingUi
+import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentMeetupsBinding
 import com.example.meetupapp.ui.recyclerViewAdapter.MeetingAdapter
@@ -27,7 +27,7 @@ class MeetUpFragment : Fragment() {
         val binding: FragmentMeetupsBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_meetups, container, false)
 
-        val items = emptyList<MeetingUi>()
+        val items = emptyList<MeetingParams>()
 
         val chat = binding.meetingRecyclerView
         chat.layoutManager = LinearLayoutManager(context)
