@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TimePicker
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -16,16 +17,18 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatBinding
 import com.example.meetupapp.pojo.MessageUi
 import com.example.meetupapp.pojo.UserModel
-import com.example.meetupapp.ui.recyclerViewAdapter.MessagesAdapter
-import com.example.meetupapp.util.extensions.getDataModel
-import com.example.meetupapp.util.extensions.sendMeetingMessage
-import com.example.meetupapp.util.extensions.sendMessage
-import com.example.meetupapp.util.firebase.AppValueEventListener
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MESSAGES
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
-import com.example.meetupapp.util.firebase.FirebaseProvider.TYPE_TEXT
+import com.example.meetupapp.ui.adapters.MessagesAdapter
+import com.example.meetupapp.ui.pickers.DatePickers
+import com.example.meetupapp.ui.pickers.TimePickers
+import com.example.meetupapp.utils.extensions.getDataModel
+import com.example.meetupapp.utils.extensions.sendMeetingMessage
+import com.example.meetupapp.utils.extensions.sendMessage
+import com.example.meetupapp.utils.firebase.AppValueEventListener
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_MESSAGES
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_USERS
+import com.example.meetupapp.utils.firebase.FirebaseProvider.TYPE_TEXT
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -40,10 +43,6 @@ class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    // TODO: 22.05.2021 Убрать в классы TimePicker и DatePicker
-    private var date = ""
-    private var hour = 0
-    private var minute = 0
 
     private val args: ChatFragmentArgs by navArgs()
 
@@ -92,51 +91,15 @@ class ChatFragment : Fragment() {
         refUser.removeEventListener(messagesListener)
     }
 
-    // TODO: 22.05.2021 Вынести в отдельный класс времени
     private fun initPickTime() =
         binding.imageAddTime.setOnClickListener {
-            showTimePicker()
+            TimePickers.initTimePickers(parentFragmentManager)
         }
 
-    private fun showTimePicker() {
-        val timePicker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
-            .setTitleText("Введите время встречи")
-            .build()
-
-        timePicker.show(parentFragmentManager, "timePicker")
-
-        timePicker.addOnPositiveButtonClickListener {
-            hour = timePicker.hour
-            minute = timePicker.minute
-            Log.e("TAG", hour.toString())
-            Log.e("TAG", minute.toString())
-        }
-    }
-
-
-    // TODO: 22.05.2021 Вынести в отдельный метод даты
     private fun initPickDate() =
         binding.imageOpenCalendar.setOnClickListener {
-            showDatePicker()
+            DatePickers.showDatePicker(parentFragmentManager)
         }
-
-    private fun showDatePicker() {
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Введите дату встречи")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
-        datePicker.show(parentFragmentManager, "datePicker")
-
-        datePicker.addOnPositiveButtonClickListener {
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+3"))
-            calendar.time = Date(it)
-            date = "${calendar.get(Calendar.DAY_OF_MONTH)}-" +
-                    "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
-            Log.e("TAG", date)
-        }
-    }
-
 
     private fun initMeetingBottomSheet() {
         val bottomSheetContent: ConstraintLayout = binding.bottomSheetContent
@@ -196,11 +159,11 @@ class ChatFragment : Fragment() {
             addMeeting.setOnClickListener {
                 val meetingName = textInputNameMeeting.text.toString()
                 val address = textInputAddress.text.toString()
-                val time = "$hour-$minute"
+                val time = TimePickers.time
                 val addedMeeting = MeetingParams(
                     name = meetingName,
                     address = address,
-                    date = date,
+                    date = DatePickers.date,
                     time = time,
                     status = "in progress"
                 )

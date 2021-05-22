@@ -1,42 +1,45 @@
-package com.example.meetupapp.ui.recyclerViewAdapter
+package com.example.meetupapp.ui.adapters
 
 import android.graphics.Color
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.R
-import com.example.meetupapp.databinding.ItemMeetingBinding
-import com.example.meetupapp.pojo.MeetingUi
-import com.example.meetupapp.util.extensions.orIfNull
+import com.example.meetupapp.databinding.ItemContactBinding
+import com.example.meetupapp.pojo.ContactUi
+import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragmentDirections
+import com.example.meetupapp.utils.extensions.orIfNull
 
-class MeetingAdapter(
-    private val items: MutableList<MeetingUi>,
+class ContactAdapter(
     private val activity: AppCompatActivity,
-    private val textView: TextView
-) : RecyclerView.Adapter<MeetingAdapter.MyViewHolder>() {
+    private val textView: TextView,
+    private val items: MutableList<ContactUi>,
+) : RecyclerView.Adapter<ContactAdapter.MyViewHolder>() {
 
     private var isTopBarEnable: Boolean = false
     private var isSelectedAll: Boolean = false
-    private var selectedItems: MutableList<MeetingUi> = mutableListOf()
+    private var selectedItems: MutableList<ContactUi> = mutableListOf()
     private var actionMode: androidx.appcompat.view.ActionMode? = null
 
-    inner class MyViewHolder(itemBinding: ItemMeetingBinding) :
+    inner class MyViewHolder(itemBinding: ItemContactBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-        val meetingName = itemBinding.meetingNameLayout
-        val dateAndTime = itemBinding.textDateTime
-        val itemRV = itemBinding.itemMeeting
+        val fullName = itemBinding.textContactName
+        val phoneNumber = itemBinding.textPhoneNumber
+        val itemRV = itemBinding.itemRV
         val check = itemBinding.checked
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding: ItemMeetingBinding = DataBindingUtil
-            .inflate(inflater, R.layout.item_meeting, parent, false)
+        val binding: ItemContactBinding = DataBindingUtil
+            .inflate(inflater, R.layout.item_contact, parent, false)
+        if (items.isNotEmpty()) {
+            textView.visibility = View.GONE
+        }
         return MyViewHolder(binding)
     }
 
@@ -50,7 +53,7 @@ class MeetingAdapter(
             }
 
             itemRV.setOnClickListener {
-                doActionOrClickedItem(it, holder)
+                doActionOrClickedItem(it, holder, position)
             }
 
             whenAllSelectClicked()
@@ -61,16 +64,19 @@ class MeetingAdapter(
     private fun MyViewHolder.fillDataViewHolder(
         position: Int
     ) {
-        meetingName.text = items[position].name
-        dateAndTime.text = items[position].dateAndTime
+        val phone = items[position].phone
+        val nickname = items[position].nickname
+        fullName.text = nickname
+        phoneNumber.text = phone.takeIf { phone != nickname }
     }
 
     private fun MyViewHolder.doActionOrClickedItem(
         view: View,
-        holder: MyViewHolder
+        holder: MyViewHolder,
+        position: Int
     ) {
         if (!isTopBarEnable) {
-            someOtherAction(view, holder)
+            goToChatFragment(view, position)
         } else {
             clickItem()
         }
@@ -121,15 +127,24 @@ class MeetingAdapter(
         }
     }
 
-    private fun someOtherAction(
+    private fun goToChatFragment(
         view: View,
-        holder: MyViewHolder
+        position: Int,
     ) {
-        Toast.makeText(
-            view.context,
-            "You clicked ${items[holder.adapterPosition]}",
-            Toast.LENGTH_SHORT
-        ).show()
+        with(items[position]) {
+            val contact = ContactUi(
+                id = id,
+                phone = phone,
+                nickname = nickname,
+                biography = biography,
+                fullname = fullname,
+                status = status,
+                photoUrl = photoUrl,
+            )
+
+            view.findNavController()
+                .navigate(ChatAndMeetingFragmentDirections.toChatFragment(contact))
+        }
     }
 
     private fun getContextualCallback(holder: MyViewHolder): androidx.appcompat.view.ActionMode.Callback =
@@ -201,7 +216,7 @@ class MeetingAdapter(
         actionMode?.finish()
 
         if (items.size == 0) {
-            textView.visibility = View.VISIBLE
+            textView.visibility = View.GONE
         }
     }
 }

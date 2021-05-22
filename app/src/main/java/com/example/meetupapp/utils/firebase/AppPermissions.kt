@@ -1,4 +1,4 @@
-package com.example.meetupapp.util.firebase
+package com.example.meetupapp.utils.firebase
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.meetupapp.pojo.ContactUi
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_ID
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_PHONE_CONTACTS
-import com.example.meetupapp.util.firebase.FirebaseProvider.referenceDatabase
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_ID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_PHONE_CONTACTS
+import com.example.meetupapp.utils.firebase.FirebaseProvider.referenceDatabase
 
 object AppPermissions {
     const val READ_CONTACTS = Manifest.permission.READ_CONTACTS

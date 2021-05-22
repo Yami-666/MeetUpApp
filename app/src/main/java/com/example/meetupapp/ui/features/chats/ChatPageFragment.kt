@@ -9,14 +9,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.meetupapp.pojo.ChatUi
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatsBinding
-import com.example.meetupapp.ui.recyclerViewAdapter.ChatPagerAdapter
-import com.example.meetupapp.util.extensions.getDataModel
-import com.example.meetupapp.util.firebase.AppValueEventListener
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MESSAGES
+import com.example.meetupapp.pojo.ChatUi
+import com.example.meetupapp.ui.adapters.ChatPagerAdapter
+import com.example.meetupapp.utils.extensions.orIfNull
+import com.example.meetupapp.utils.firebase.AppValueEventListener
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_FROM
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_TEXT
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_TO
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_MESSAGES
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,10 +88,22 @@ class ChatPageFragment : Fragment() {
     private fun getAllChats() =
         AppValueEventListener { dataSnapshot ->
             dataSnapshot.children.forEach { data ->
-                val chatsValue = ChatUi(
-                    fullName = data.key.toString()
-                )
-                chats.value = chatsValue
+                val dataMap = data.value as HashMap<*, *>
+                val chatsValue = dataMap.values.map { it as HashMap<*, *> }.map {
+                    val fromString = it[CHILD_FROM] as? String
+                    val from = fromString.orEmpty()
+                    val text = it[CHILD_TEXT] as? String
+                    val lastMessage = text.orEmpty()
+                    val toString = it[CHILD_TO] as? String
+                    val to = toString.orEmpty()
+                    ChatUi(
+                        fullName = from,
+                        lastMessage = lastMessage,
+                        to = to,
+                        from = from
+                    )
+                }
+                chats.value = chatsValue.last { it.fullName.isNotEmpty() && it.lastMessage.isNotEmpty()}
             }
         }
 

@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentMeetupsBinding
 import com.example.meetupapp.pojo.MeetingUi
-import com.example.meetupapp.ui.recyclerViewAdapter.MeetingAdapter
-import com.example.meetupapp.util.firebase.AppValueEventListener
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MEETINGS
+import com.example.meetupapp.ui.adapters.MeetingAdapter
+import com.example.meetupapp.utils.extensions.getDataModel
+import com.example.meetupapp.utils.firebase.AppValueEventListener
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_MEETINGS
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,9 +85,7 @@ class MeetingPageFragment : Fragment() {
     private fun getAllMeetings() =
         AppValueEventListener { dataSnapshot ->
             dataSnapshot.children.forEach { data ->
-                val meetingValue = MeetingUi(
-                    name = data.key.toString()
-                )
+                val meetingValue = data.getDataModel<MeetingUi>()
                 meetings.value = meetingValue
             }
         }

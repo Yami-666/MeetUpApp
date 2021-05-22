@@ -1,4 +1,4 @@
-package com.example.meetupapp.ui.recyclerViewAdapter
+package com.example.meetupapp.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemMessageBinding
 import com.example.meetupapp.pojo.MessageUi
-import com.example.meetupapp.util.extensions.setHide
-import com.example.meetupapp.util.extensions.setVisibility
-import com.example.meetupapp.util.extensions.toTimeHHmmFormat
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.extensions.setHide
+import com.example.meetupapp.utils.extensions.setVisibility
+import com.example.meetupapp.utils.extensions.toTimeHHmmFormat
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
 
 class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MyViewHolder>() {
 

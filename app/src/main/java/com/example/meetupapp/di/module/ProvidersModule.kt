@@ -1,8 +1,8 @@
 package com.example.meetupapp.di.module
 
 import android.content.Context
-import com.example.meetupapp.util.providers.IStringProvider
-import com.example.meetupapp.util.providers.StringProvider
+import com.example.meetupapp.utils.providers.IStringProvider
+import com.example.meetupapp.utils.providers.StringProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

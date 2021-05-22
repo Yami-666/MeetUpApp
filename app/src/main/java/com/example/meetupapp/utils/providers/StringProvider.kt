@@ -1,4 +1,4 @@
-package com.example.meetupapp.util.providers
+package com.example.meetupapp.utils.providers
 
 import android.content.Context
 import com.example.meetupapp.R

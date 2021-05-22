@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.meetupapp.R
-import com.example.meetupapp.util.enum.UserStatus
-import com.example.meetupapp.util.firebase.AppPermissions.READ_CONTACTS
-import com.example.meetupapp.util.firebase.AppPermissions.checkPermission
-import com.example.meetupapp.util.firebase.FirebaseProvider
+import com.example.meetupapp.utils.enum.UserStatus
+import com.example.meetupapp.utils.firebase.AppPermissions.READ_CONTACTS
+import com.example.meetupapp.utils.firebase.AppPermissions.checkPermission
+import com.example.meetupapp.utils.firebase.FirebaseProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 

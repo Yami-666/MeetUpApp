@@ -1,9 +1,9 @@
-package com.example.meetupapp.util.enum
+package com.example.meetupapp.utils.enum
 
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_STATE
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_STATE
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_USERS
 
 enum class UserStatus(val status: String) {
     ONLINE("online"),

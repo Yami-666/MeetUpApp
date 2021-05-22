@@ -11,19 +11,19 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentPhoneCodeBinding
-import com.example.meetupapp.util.enum.UserStatus
-import com.example.meetupapp.util.extensions.hide
-import com.example.meetupapp.util.extensions.setVisibility
-import com.example.meetupapp.util.extensions.showToast
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_ID
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_NICKNAME
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_PHONE
-import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_STATE
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_PHONES
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
-import com.example.meetupapp.util.firebase.FirebaseProvider.authFirebase
+import com.example.meetupapp.utils.enum.UserStatus
+import com.example.meetupapp.utils.extensions.hide
+import com.example.meetupapp.utils.extensions.setVisibility
+import com.example.meetupapp.utils.extensions.showToast
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_ID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_NICKNAME
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_PHONE
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_STATE
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_PHONES
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_USERS
+import com.example.meetupapp.utils.firebase.FirebaseProvider.authFirebase
 import com.google.firebase.auth.PhoneAuthProvider
 
 class PhoneCodeFragment : Fragment() {

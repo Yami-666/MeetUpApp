@@ -1,10 +1,10 @@
-package com.example.meetupapp.ui.viewPager
+package com.example.meetupapp.ui.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.meetupapp.ui.features.chats.ChatPageFragment
 import com.example.meetupapp.ui.features.meetings.MeetingPageFragment
-import com.example.meetupapp.util.Constants
+import com.example.meetupapp.utils.Constants
 import java.lang.IllegalStateException
 
 class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

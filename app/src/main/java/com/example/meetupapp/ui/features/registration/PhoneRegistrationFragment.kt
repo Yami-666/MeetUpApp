@@ -1,14 +1,7 @@
 package com.example.meetupapp.ui.features.registration
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
-import android.widget.CalendarView
-import android.widget.DatePicker
-import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -18,17 +11,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.meetupapp.pojo.UserRegistration
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentPhoneRegistrationBinding
-import com.example.meetupapp.util.extensions.hide
-import com.example.meetupapp.util.extensions.setVisibility
-import com.example.meetupapp.util.extensions.show
-import com.example.meetupapp.util.extensions.showToast
-import com.example.meetupapp.util.firebase.FirebaseProvider
+import com.example.meetupapp.utils.extensions.hide
+import com.example.meetupapp.utils.extensions.setVisibility
+import com.example.meetupapp.utils.extensions.showToast
+import com.example.meetupapp.utils.firebase.FirebaseProvider
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PhoneRegistrationFragment : Fragment() {

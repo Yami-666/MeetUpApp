@@ -1,4 +1,4 @@
-package com.example.meetupapp.util.firebase
+package com.example.meetupapp.utils.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase

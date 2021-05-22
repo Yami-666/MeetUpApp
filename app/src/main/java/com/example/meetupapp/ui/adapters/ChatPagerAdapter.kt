@@ -1,4 +1,4 @@
-package com.example.meetupapp.ui.recyclerViewAdapter
+package com.example.meetupapp.ui.adapters
 
 import android.graphics.Color
 import android.view.*
@@ -11,9 +11,8 @@ import com.example.meetupapp.pojo.ChatUi
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemChatBinding
 import com.example.meetupapp.pojo.ContactUi
-import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragment
 import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragmentDirections
-import com.example.meetupapp.util.extensions.orIfNull
+import com.example.meetupapp.utils.extensions.orIfNull
 
 class ChatPagerAdapter(
     private val items: MutableList<ChatUi>,
@@ -130,7 +129,7 @@ class ChatPagerAdapter(
 
         with(items[position]) {
             val contact = ContactUi(
-                id = this.fullName
+                id = this.to
             )
 
             view.findNavController()

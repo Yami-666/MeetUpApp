@@ -1,4 +1,4 @@
-package com.example.meetupapp.util
+package com.example.meetupapp.utils
 
 object Constants {
     const val EMPTY_STRING = ""
