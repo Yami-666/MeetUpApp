@@ -4,9 +4,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import com.example.meetupapp.R
-import com.example.meetupapp.pojo.enum.UserStatus
+import com.example.meetupapp.util.enum.UserStatus
 import com.example.meetupapp.util.firebase.AppPermissions.READ_CONTACTS
 import com.example.meetupapp.util.firebase.AppPermissions.checkPermission
 import com.example.meetupapp.util.firebase.FirebaseProvider

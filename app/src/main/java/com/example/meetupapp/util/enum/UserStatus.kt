@@ -1,4 +1,4 @@
-package com.example.meetupapp.pojo.enum
+package com.example.meetupapp.util.enum
 
 import com.example.meetupapp.util.firebase.FirebaseProvider
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_STATE

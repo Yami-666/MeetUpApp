@@ -51,7 +51,7 @@ class ContactsFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_contacts, container, false)
 
         binding.contactsProgressBar.show()
-        initRecyclerView()
+        initContactData()
         initTopBarBackListener(binding)
         contacts.observe(viewLifecycleOwner) {
             updateRecyclerView(binding, it)
@@ -75,7 +75,7 @@ class ContactsFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun initRecyclerView() {
+    private fun initContactData() {
         CURRENT_UID?.let {
             val contactIdListener = getContactId()
             val refDatabase = FirebaseDatabase.getInstance().reference

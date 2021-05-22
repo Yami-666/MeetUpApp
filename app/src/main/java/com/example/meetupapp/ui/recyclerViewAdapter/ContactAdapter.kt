@@ -11,6 +11,7 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemContactBinding
 import com.example.meetupapp.pojo.ContactUi
 import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragmentDirections
+import com.example.meetupapp.util.extensions.orIfNull
 
 class ContactAdapter(
     private val activity: AppCompatActivity,
@@ -152,8 +153,10 @@ class ContactAdapter(
                 mode: androidx.appcompat.view.ActionMode?,
                 menu: Menu?
             ): Boolean {
-                val menuInflater = mode?.menuInflater!!
-                menuInflater.inflate(R.menu.contextual_menu, menu)
+                val menuInflater = mode?.menuInflater
+                menuInflater?.inflate(R.menu.contextual_menu, menu).orIfNull {
+                    return false
+                }
                 return true
             }
 

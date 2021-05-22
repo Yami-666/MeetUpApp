@@ -8,6 +8,7 @@ object FirebaseProvider {
     const val NODE_PHONES = "phones"
     const val NODE_PHONE_CONTACTS = "phone_contacts"
     const val NODE_MESSAGES = "messages"
+    const val NODE_MEETINGS = "meetings"
 
     const val CHILD_ID = "id"
     const val CHILD_PHONE = "phone"

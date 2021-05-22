@@ -16,7 +16,6 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatBinding
 import com.example.meetupapp.pojo.MessageUi
 import com.example.meetupapp.pojo.UserModel
-import com.example.meetupapp.pojo.enum.MeetingStatus
 import com.example.meetupapp.ui.recyclerViewAdapter.MessagesAdapter
 import com.example.meetupapp.util.extensions.getDataModel
 import com.example.meetupapp.util.extensions.sendMeetingMessage
@@ -41,12 +40,31 @@ class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    // TODO: 22.05.2021 Убрать
+    // TODO: 22.05.2021 Убрать в классы TimePicker и DatePicker
     private var date = ""
     private var hour = 0
     private var minute = 0
 
     private val args: ChatFragmentArgs by navArgs()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil
+            .inflate(inflater, R.layout.fragment_chat, container, false)
+        binding.userName.text = args.contactArg.nickname
+
+        initTopBarBackListener()
+        initRecyclerView()
+        initSendMessageListener()
+        initMeetingBottomSheet()
+        initPickTime()
+        initPickDate()
+        initSendMeeting()
+        return binding.root
+    }
 
     override fun onResume() {
         super.onResume()
@@ -72,25 +90,6 @@ class ChatFragment : Fragment() {
         super.onPause()
         refUser.removeEventListener(listenerInfoToolBar)
         refUser.removeEventListener(messagesListener)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil
-            .inflate(inflater, R.layout.fragment_chat, container, false)
-        binding.userName.text = args.contactArg.nickname
-
-        initTopBarBackListener()
-        initRecyclerView()
-        initSendMessageListener()
-        initMeetingBottomSheet()
-        initPickTime()
-        initPickDate()
-        initSendMeeting()
-        return binding.root
     }
 
     // TODO: 22.05.2021 Вынести в отдельный класс времени
@@ -164,7 +163,9 @@ class ChatFragment : Fragment() {
                 .child(currentId)
                 .child(contactId)
             messagesListener = AppValueEventListener { dataSnapshot ->
-                val messages = dataSnapshot.children.map { it.getDataModel<MessageUi>() }
+                val messages = dataSnapshot.children
+                    .map { it.getDataModel<MessageUi>() }
+                    .filter { it.text.isNotEmpty() && it.timestamp != 0 }
                 adapter.setList(messages)
             }
             refMessages.addValueEventListener(messagesListener)

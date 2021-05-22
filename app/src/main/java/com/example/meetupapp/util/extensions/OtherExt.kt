@@ -19,6 +19,7 @@ import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TIMESTAMP
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TO
 import com.example.meetupapp.util.firebase.FirebaseProvider.CHILD_TYPE
 import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MEETINGS
 import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_MESSAGES
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ServerValue
@@ -76,10 +77,10 @@ fun sendMessage(
     doAfterCompleteSend: () -> Unit
 ) {
     CURRENT_UID?.let { currentUserId ->
-        val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
-        val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
+        val refMessages = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
+        val refMessagesReceiver = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
 
-        val messageKey = FirebaseProvider.referenceDatabase.child(refDialogUser).push().key
+        val messageKey = FirebaseProvider.referenceDatabase.child(refMessages).push().key
         val mapMessage = HashMap<String, Any>()
 
         mapMessage[CHILD_FROM] = currentUserId
@@ -89,8 +90,8 @@ fun sendMessage(
         mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
 
         val mapDialog = HashMap<String, Any>()
-        mapDialog["$refDialogUser/$messageKey"] = mapMessage
-        mapDialog["$refDialogReceivingUser/$messageKey"] = mapMessage
+        mapDialog["$refMessages/$messageKey"] = mapMessage
+        mapDialog["$refMessagesReceiver/$messageKey"] = mapMessage
 
         FirebaseProvider.referenceDatabase
             .updateChildren(mapDialog)
@@ -107,28 +108,67 @@ fun sendMeetingMessage(
     doAfterCompleteSend: () -> Unit
 ) {
     CURRENT_UID?.let { currentUserId ->
-        val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
-        val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
-
-        val messageKey = FirebaseProvider.referenceDatabase.child(refDialogUser).push().key
-        val mapMessage = HashMap<String, Any>()
-
-        mapMessage[CHILD_NAME] = meetingMessage.name
-        mapMessage[CHILD_DATE] = meetingMessage.date
-        mapMessage[CHILD_TIME] = meetingMessage.time
-        mapMessage[CHILD_ADDRESS] = meetingMessage.address
-        mapMessage[CHILD_FROM] = currentUserId
-        mapMessage[CHILD_TO] = receivingUserId
-        mapMessage[CHILD_STATUS] = meetingMessage.status
-
-        val mapDialog = HashMap<String, Any>()
-        mapDialog["$refDialogUser/$messageKey"] = mapMessage
-        mapDialog["$refDialogReceivingUser/$messageKey"] = mapMessage
-
-        FirebaseProvider.referenceDatabase
-            .updateChildren(mapDialog)
-            .addOnCompleteListener { doAfterCompleteSend() }
+        sendToNodeMessages(receivingUserId, meetingMessage, currentUserId)
+        sendToNodeMeetings(receivingUserId, meetingMessage, currentUserId, doAfterCompleteSend)
     }.orIfNull {
         // TODO: 22.05.2021 Добавить лог
     }
+}
+
+fun sendToNodeMeetings(
+    receivingUserId: String,
+    meetingMessage: MeetingParams,
+    currentUserId: String,
+    doAfterCompleteSend: () -> Unit
+) {
+    val refMeetings = "$NODE_MEETINGS/$CURRENT_UID/"
+    val refMeetingsReceiver = "$NODE_MEETINGS/$receivingUserId/"
+
+    val messageKey = FirebaseProvider.referenceDatabase.child(refMeetings).push().key
+    val mapMessage = HashMap<String, Any>()
+
+    mapMessage[CHILD_NAME] = meetingMessage.name
+    mapMessage[CHILD_DATE] = meetingMessage.date
+    mapMessage[CHILD_TIME] = meetingMessage.time
+    mapMessage[CHILD_ADDRESS] = meetingMessage.address
+    mapMessage[CHILD_FROM] = currentUserId
+    mapMessage[CHILD_TO] = receivingUserId
+    mapMessage[CHILD_STATUS] = meetingMessage.status
+
+    val mapDialog = HashMap<String, Any>()
+    mapDialog["$refMeetings/$messageKey"] = mapMessage
+    mapDialog["$refMeetingsReceiver/$messageKey"] = mapMessage
+
+    FirebaseProvider.referenceDatabase
+        .updateChildren(mapDialog)
+        .addOnCompleteListener {
+            doAfterCompleteSend()
+        }
+}
+
+private fun sendToNodeMessages(
+    receivingUserId: String,
+    meetingMessage: MeetingParams,
+    currentUserId: String
+) {
+    val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
+    val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
+
+    val messageKey = FirebaseProvider.referenceDatabase.child(refDialogUser).push().key
+    val mapMessage = HashMap<String, Any>()
+
+    mapMessage[CHILD_NAME] = meetingMessage.name
+    mapMessage[CHILD_DATE] = meetingMessage.date
+    mapMessage[CHILD_TIME] = meetingMessage.time
+    mapMessage[CHILD_ADDRESS] = meetingMessage.address
+    mapMessage[CHILD_FROM] = currentUserId
+    mapMessage[CHILD_TO] = receivingUserId
+    mapMessage[CHILD_STATUS] = meetingMessage.status
+
+    val mapDialog = HashMap<String, Any>()
+    mapDialog["$refDialogUser/$messageKey"] = mapMessage
+    mapDialog["$refDialogReceivingUser/$messageKey"] = mapMessage
+
+    FirebaseProvider.referenceDatabase
+        .updateChildren(mapDialog)
 }

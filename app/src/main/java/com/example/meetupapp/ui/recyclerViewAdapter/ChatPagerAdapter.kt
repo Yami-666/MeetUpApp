@@ -13,6 +13,7 @@ import com.example.meetupapp.databinding.ItemChatBinding
 import com.example.meetupapp.pojo.ContactUi
 import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragment
 import com.example.meetupapp.ui.features.chatmeet.ChatAndMeetingFragmentDirections
+import com.example.meetupapp.util.extensions.orIfNull
 
 class ChatPagerAdapter(
     private val items: MutableList<ChatUi>,
@@ -144,8 +145,10 @@ class ChatPagerAdapter(
                 mode: androidx.appcompat.view.ActionMode?,
                 menu: Menu?
             ): Boolean {
-                val menuInflater = mode?.menuInflater!!
-                menuInflater.inflate(R.menu.contextual_menu, menu)
+                val menuInflater = mode?.menuInflater
+                menuInflater?.inflate(R.menu.contextual_menu, menu).orIfNull {
+                    return false
+                }
                 return true
             }
 

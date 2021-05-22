@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentPhoneCodeBinding
-import com.example.meetupapp.pojo.enum.UserStatus
+import com.example.meetupapp.util.enum.UserStatus
 import com.example.meetupapp.util.extensions.hide
 import com.example.meetupapp.util.extensions.setVisibility
 import com.example.meetupapp.util.extensions.showToast

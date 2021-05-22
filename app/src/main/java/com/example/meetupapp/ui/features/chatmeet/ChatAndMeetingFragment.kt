@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatsAndMeetingsBinding
-import com.example.meetupapp.pojo.enum.UserStatus
+import com.example.meetupapp.util.enum.UserStatus
 import com.example.meetupapp.ui.viewPager.ViewPagerAdapter
 import com.example.meetupapp.util.firebase.AppPermissions
 import com.example.meetupapp.util.Constants.CHAT_POSITION
@@ -25,7 +25,6 @@ import dagger.hilt.android.scopes.FragmentScoped
 @FragmentScoped
 @AndroidEntryPoint
 class ChatAndMeetingFragment : Fragment() {
-    private val viewModel: ChatAndMeetingViewModel by viewModels()
     private lateinit var binding: FragmentChatsAndMeetingsBinding
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
@@ -47,7 +46,15 @@ class ChatAndMeetingFragment : Fragment() {
             }
             initDrawerItemListener(binding)
             initUserContacts()
+            createMessage()
             return root
+        }
+    }
+
+    private fun createMessage() {
+        binding.fabAddMessage.setOnClickListener {
+            findNavController()
+                .navigate(ChatAndMeetingFragmentDirections.toContactsFragment())
         }
     }
 

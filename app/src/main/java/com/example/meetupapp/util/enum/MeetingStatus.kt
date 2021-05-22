@@ -1,4 +1,4 @@
-package com.example.meetupapp.pojo.enum
+package com.example.meetupapp.util.enum
 
 enum class MeetingStatus(val status: String) {
     IN_PROGRESS("in progress"),

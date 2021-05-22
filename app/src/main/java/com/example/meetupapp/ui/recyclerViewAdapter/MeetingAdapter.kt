@@ -10,16 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemMeetingBinding
+import com.example.meetupapp.pojo.MeetingUi
+import com.example.meetupapp.util.extensions.orIfNull
 
 class MeetingAdapter(
-    private val items: MutableList<MeetingParams>,
+    private val items: MutableList<MeetingUi>,
     private val activity: AppCompatActivity,
     private val textView: TextView
 ) : RecyclerView.Adapter<MeetingAdapter.MyViewHolder>() {
 
     private var isTopBarEnable: Boolean = false
     private var isSelectedAll: Boolean = false
-    private var selectedItems: MutableList<MeetingParams> = mutableListOf()
+    private var selectedItems: MutableList<MeetingUi> = mutableListOf()
     private var actionMode: androidx.appcompat.view.ActionMode? = null
 
     inner class MyViewHolder(itemBinding: ItemMeetingBinding) :
@@ -60,7 +62,7 @@ class MeetingAdapter(
         position: Int
     ) {
         meetingName.text = items[position].name
-        dateAndTime.text = items[position].date
+        dateAndTime.text = items[position].dateAndTime
     }
 
     private fun MyViewHolder.doActionOrClickedItem(
@@ -136,8 +138,10 @@ class MeetingAdapter(
                 mode: androidx.appcompat.view.ActionMode?,
                 menu: Menu?
             ): Boolean {
-                val menuInflater = mode?.menuInflater!!
-                menuInflater.inflate(R.menu.contextual_menu, menu)
+                val menuInflater = mode?.menuInflater
+                menuInflater?.inflate(R.menu.contextual_menu, menu).orIfNull {
+                    return false
+                }
                 return true
             }
 
