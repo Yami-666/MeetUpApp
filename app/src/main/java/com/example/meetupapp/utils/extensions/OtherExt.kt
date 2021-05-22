@@ -96,8 +96,6 @@ fun sendMessage(
         FirebaseProvider.referenceDatabase
             .updateChildren(mapDialog)
             .addOnCompleteListener { doAfterCompleteSend() }
-    }.orIfNull {
-        // TODO: 22.05.2021 Добавить лог
     }
 }
 
@@ -110,8 +108,6 @@ fun sendMeetingMessage(
     CURRENT_UID?.let { currentUserId ->
         sendToNodeMessages(receivingUserId, meetingMessage, currentUserId)
         sendToNodeMeetings(receivingUserId, meetingMessage, currentUserId, doAfterCompleteSend)
-    }.orIfNull {
-        // TODO: 22.05.2021 Добавить лог
     }
 }
 
