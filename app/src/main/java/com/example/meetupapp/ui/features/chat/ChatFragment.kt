@@ -165,7 +165,7 @@ class ChatFragment : Fragment() {
                     address = address,
                     date = DatePickers.date,
                     time = time,
-                    status = "in progress"
+                    status = MEETINGS_IN_PROGRESS
                 )
                 sendMeetingMessage(addedMeeting, args.contactArg.id) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -180,4 +180,7 @@ class ChatFragment : Fragment() {
         }
     }
 
+    companion object {
+        private const val MEETINGS_IN_PROGRESS = "in progress"
+    }
 }

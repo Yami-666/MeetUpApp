@@ -63,7 +63,7 @@ class PhoneCodeFragment : Fragment() {
     }
 
     private fun showErrorMessage(binding: FragmentPhoneCodeBinding) {
-        binding.layoutTextPhoneCode.error = "Неверный код"
+        binding.layoutTextPhoneCode.error = WRONG_SMS_CODE
         binding.layoutTextPhoneCode.isErrorEnabled = true
     }
 
@@ -115,5 +115,9 @@ class PhoneCodeFragment : Fragment() {
                     }
             }
 
+    }
+
+    companion object {
+        private const val WRONG_SMS_CODE = "Неверный код"
     }
 }

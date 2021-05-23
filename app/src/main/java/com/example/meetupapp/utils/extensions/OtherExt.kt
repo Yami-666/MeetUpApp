@@ -7,10 +7,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.meetupapp.pojo.MeetingParams
 import com.example.meetupapp.utils.Constants.EMPTY_STRING
+import com.example.meetupapp.utils.Constants.TIME_HH_MM_PATTERN
 import com.example.meetupapp.utils.firebase.FirebaseProvider
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_ADDRESS
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_DATE
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_FROM
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_ID
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_NAME
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_STATUS
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_TEXT
@@ -55,14 +57,14 @@ fun View.setVisibility() {
     this.visibility = View.VISIBLE
 }
 
-fun View.setHide() {
+fun View.hide() {
     this.visibility = View.GONE
 }
 
 fun String.toTimeHHmmFormat(): String {
     return try {
         val time = Date(this.toLong())
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val timeFormat = SimpleDateFormat(TIME_HH_MM_PATTERN, Locale.getDefault())
         timeFormat.format(time)
     } catch (e: Exception) {
         Log.e("toTimeHHmmFormat", "toTimeHHmmFormat(): ${e.message}")
@@ -106,7 +108,6 @@ fun sendMeetingMessage(
     doAfterCompleteSend: () -> Unit
 ) {
     CURRENT_UID?.let { currentUserId ->
-        sendToNodeMessages(receivingUserId, meetingMessage, currentUserId)
         sendToNodeMeetings(receivingUserId, meetingMessage, currentUserId, doAfterCompleteSend)
     }
 }
@@ -123,6 +124,7 @@ fun sendToNodeMeetings(
     val messageKey = FirebaseProvider.referenceDatabase.child(refMeetings).push().key
     val mapMessage = HashMap<String, Any>()
 
+    mapMessage[CHILD_ID] = messageKey.orEmpty()
     mapMessage[CHILD_NAME] = meetingMessage.name
     mapMessage[CHILD_DATE] = meetingMessage.date
     mapMessage[CHILD_TIME] = meetingMessage.time

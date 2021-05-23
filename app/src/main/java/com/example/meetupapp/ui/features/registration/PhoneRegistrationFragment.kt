@@ -68,7 +68,7 @@ class PhoneRegistrationFragment : Fragment() {
     }
 
     private fun showErrorMessage(binding: FragmentPhoneRegistrationBinding) {
-        binding.layoutTextPhoneNumber.error = "Введите номер телефона"
+        binding.layoutTextPhoneNumber.error = MESSAGE_ENTER_PHONE_NUMBER
         binding.layoutTextPhoneNumber.isErrorEnabled = true
     }
 
@@ -130,4 +130,7 @@ class PhoneRegistrationFragment : Fragment() {
         inflater.inflate(R.menu.top_bar_menu, menu)
     }
 
+    companion object {
+        private const val MESSAGE_ENTER_PHONE_NUMBER = "Введите номер телефона"
+    }
 }

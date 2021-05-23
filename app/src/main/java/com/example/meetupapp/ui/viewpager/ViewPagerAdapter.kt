@@ -17,7 +17,11 @@ class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             Constants.MEETING_POSITION -> {
                 MeetingPageFragment()
             }
-            else -> throw IllegalStateException("Illegal ViewPager2 Position")
+            else -> throw IllegalStateException(WRONG_VIEW_PAGER_EXCEPTION)
         }
+    }
+
+    companion object {
+        private const val WRONG_VIEW_PAGER_EXCEPTION = "Illegal ViewPager2 Position"
     }
 }

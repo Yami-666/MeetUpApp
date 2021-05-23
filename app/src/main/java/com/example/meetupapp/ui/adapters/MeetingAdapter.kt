@@ -10,6 +10,10 @@ import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemMeetingBinding
 import com.example.meetupapp.pojo.MeetingUi
 import com.example.meetupapp.utils.extensions.orIfNull
+import com.example.meetupapp.utils.extensions.hide
+import com.example.meetupapp.utils.firebase.AppValueEventListener
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_MEETINGS
 
 class MeetingAdapter(
     private val items: MutableList<MeetingUi>,
@@ -27,6 +31,7 @@ class MeetingAdapter(
 
         val meetingName = itemBinding.meetingNameLayout
         val dateAndTime = itemBinding.textDateTime
+        val address = itemBinding.meetingAddress
         val itemRV = itemBinding.itemMeeting
         val check = itemBinding.checked
     }
@@ -35,22 +40,26 @@ class MeetingAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding: ItemMeetingBinding = DataBindingUtil
             .inflate(inflater, R.layout.item_meeting, parent, false)
+        checkItemsSize()
         return MyViewHolder(binding)
+    }
+
+    private fun checkItemsSize() {
+        if (items.isNotEmpty()) {
+            textView.hide()
+        }
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         with(holder) {
             fillDataViewHolder(position)
-
             itemRV.setOnLongClickListener {
                 createContextualTopBarOrClickedItem(holder)
                 true
             }
-
             itemRV.setOnClickListener {
                 doActionOrClickedItem(it, holder)
             }
-
             whenAllSelectClicked()
         }
 
@@ -62,6 +71,7 @@ class MeetingAdapter(
         val dateAndTimeFromItem = "${items[position].date} ${items[position].time}"
         meetingName.text = items[position].name
         dateAndTime.text = dateAndTimeFromItem
+        address.text = items[position].address
     }
 
     private fun MyViewHolder.doActionOrClickedItem(
@@ -87,7 +97,9 @@ class MeetingAdapter(
         actionMode?.title = selectedItems.size.toString()
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        return items.size
+    }
 
 
     private fun createContextualTopBar(
@@ -174,6 +186,7 @@ class MeetingAdapter(
     private fun clearDataFromItemsList() {
         isTopBarEnable = false
         isSelectedAll = false
+
         selectedItems.clear()
         notifyDataSetChanged()
     }
@@ -193,11 +206,29 @@ class MeetingAdapter(
 
     private fun onTopBarDeleteClicked() {
         items.removeAll(selectedItems)
+        selectedItems.removeFromFirebase()
+        checkItemsSize()
         actionMode?.finish()
+    }
+}
 
-        if (items.size == 0) {
-            textView.visibility = View.VISIBLE
-        }
+private fun MutableList<MeetingUi>.removeFromFirebase() {
+    val removeListener = AppValueEventListener {
+        it.ref.removeValue()
+    }
+
+    forEach { meetingUi ->
+        FirebaseProvider.referenceDatabase
+            .child(NODE_MEETINGS)
+            .child(meetingUi.from)
+            .child(meetingUi.id)
+            .addListenerForSingleValueEvent(removeListener)
+
+        FirebaseProvider.referenceDatabase
+            .child(NODE_MEETINGS)
+            .child(meetingUi.to)
+            .child(meetingUi.id)
+            .addListenerForSingleValueEvent(removeListener)
     }
 }
 

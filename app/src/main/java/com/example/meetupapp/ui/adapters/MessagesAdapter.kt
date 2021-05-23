@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.ItemMessageBinding
 import com.example.meetupapp.pojo.MessageUi
-import com.example.meetupapp.utils.extensions.setHide
+import com.example.meetupapp.utils.extensions.hide
 import com.example.meetupapp.utils.extensions.setVisibility
 import com.example.meetupapp.utils.extensions.toTimeHHmmFormat
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
@@ -57,7 +57,7 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MyViewHolder>() {
     private fun MyViewHolder.initReceiveMessage(
         position: Int
     ) {
-        blockMessageSender.setHide()
+        blockMessageSender.hide()
         blockMessageReceiver.setVisibility()
         messageReceiver.text = messagesCache[position].text
 
@@ -65,7 +65,7 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MyViewHolder>() {
         if (timeStamp.isNotEmpty()) {
             messageReceiverTime.text = timeStamp.toTimeHHmmFormat()
         } else {
-            messageReceiverTime.setHide()
+            messageReceiverTime.hide()
         }
     }
 
@@ -73,13 +73,13 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MyViewHolder>() {
         position: Int
     ) {
         blockMessageSender.setVisibility()
-        blockMessageReceiver.setHide()
+        blockMessageReceiver.hide()
         messageSender.text = messagesCache[position].text
         val timeStamp = messagesCache[position].timestamp.toString()
         if (timeStamp.isNotEmpty()) {
             messageSenderTime.text = timeStamp.toTimeHHmmFormat()
         } else {
-            messageSenderTime.setHide()
+            messageSenderTime.hide()
         }
     }
 

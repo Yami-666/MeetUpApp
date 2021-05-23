@@ -68,7 +68,6 @@ class ContactsFragment : Fragment() {
         contact.layoutManager = LinearLayoutManager(context)
         adapter = ContactAdapter(
             items = list,
-            activity = activity as AppCompatActivity,
             textView = binding.text
         )
         contact.adapter = adapter

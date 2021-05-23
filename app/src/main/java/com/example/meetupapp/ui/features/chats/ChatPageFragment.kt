@@ -8,12 +8,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentChatsBinding
+import com.example.meetupapp.databinding.FragmentContactsBinding
 import com.example.meetupapp.pojo.ChatUi
+import com.example.meetupapp.pojo.ContactUi
 import com.example.meetupapp.ui.adapters.ChatPagerAdapter
+import com.example.meetupapp.ui.adapters.ContactAdapter
+import com.example.meetupapp.ui.features.contacts.ContactsFragmentDirections
+import com.example.meetupapp.utils.extensions.getDataModel
+import com.example.meetupapp.utils.extensions.hide
 import com.example.meetupapp.utils.extensions.orIfNull
+import com.example.meetupapp.utils.extensions.show
 import com.example.meetupapp.utils.firebase.AppValueEventListener
 import com.example.meetupapp.utils.firebase.FirebaseProvider
 import com.example.meetupapp.utils.firebase.FirebaseProvider.CHILD_FROM
@@ -29,10 +37,10 @@ import dagger.hilt.android.scopes.FragmentScoped
 @AndroidEntryPoint
 class ChatPageFragment : Fragment() {
 
-    private lateinit var adapter: ChatPagerAdapter
+    private lateinit var adapter: ContactAdapter
     private lateinit var binding: FragmentChatsBinding
-    private val chats = MutableLiveData<ChatUi>()
-    private val list = mutableListOf<ChatUi>()
+    private val contacts = MutableLiveData<ContactUi>()
+    private val list = mutableListOf<ContactUi>()
 
     /**
      * При закрытии фрагмента необходимо очистить всех слушателей Firebase
@@ -48,8 +56,8 @@ class ChatPageFragment : Fragment() {
     ): View {
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_chats, container, false)
-        initRecyclerView()
-        chats.observe(viewLifecycleOwner) {
+        initContactData()
+        contacts.observe(viewLifecycleOwner) {
             updateRecyclerView(binding, it)
         }
         return binding.root
@@ -57,60 +65,61 @@ class ChatPageFragment : Fragment() {
 
     private fun updateRecyclerView(
         binding: FragmentChatsBinding,
-        it: ChatUi
+        it: ContactUi
     ) {
+        /**
+         * Так сделано для того, чтобы при обновлении списка
+         * не дублировались существующие элементы
+         * */
         if (!list.contains(it)) {
             list.add(it)
         }
-        val chatRecyclerView = binding.charRecyclerView
-        chatRecyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ChatPagerAdapter(
+        val contact = binding.charRecyclerView
+        contact.layoutManager = LinearLayoutManager(context)
+        adapter = ContactAdapter(
             items = list,
-            activity = activity as AppCompatActivity,
             textView = binding.textChatsIsEmpty
         )
-        chatRecyclerView.adapter = adapter
+        contact.adapter = adapter
         adapter.notifyDataSetChanged()
     }
 
-    private fun initRecyclerView() {
+    private fun initContactData() {
         FirebaseProvider.CURRENT_UID?.let {
-            val getChatsListener = getAllChats()
+            val contactIdListener = getContactId()
             val refDatabase = FirebaseDatabase.getInstance().reference
-            refDatabase.child(NODE_MESSAGES)
+            refDatabase.child(FirebaseProvider.NODE_PHONE_CONTACTS)
                 .child(it)
-                .addListenerForSingleValueEvent(getChatsListener)
-            refListener = getChatsListener
-            mapListener[refDatabase] = getChatsListener
+                .addValueEventListener(contactIdListener)
+            mapListener[refDatabase] = contactIdListener
         }
     }
 
-    private fun getAllChats() =
+    private fun getContactId() =
         AppValueEventListener { dataSnapshot ->
-            dataSnapshot.children.forEach { data ->
-                val dataMap = data.value as HashMap<*, *>
-                val chatsValue = dataMap.values.map { it as HashMap<*, *> }.map {
-                    val fromString = it[CHILD_FROM] as? String
-                    val from = fromString.orEmpty()
-                    val text = it[CHILD_TEXT] as? String
-                    val lastMessage = text.orEmpty()
-                    val toString = it[CHILD_TO] as? String
-                    val to = toString.orEmpty()
-                    ChatUi(
-                        fullName = from,
-                        lastMessage = lastMessage,
-                        to = to,
-                        from = from
-                    )
+            dataSnapshot.children.forEach { dataSnapshot2 ->
+                dataSnapshot2?.let { data ->
+                    val userId = data.getDataModel<ContactUi>()
+                    val refDatabase =
+                        FirebaseProvider.referenceDatabase.child(FirebaseProvider.NODE_USERS).child(userId.id)
+                    val contactsListener = getContactValueListener()
+
+                    mapListener[refDatabase] = contactsListener
+                    refDatabase.addListenerForSingleValueEvent(contactsListener)
                 }
-                chats.value = chatsValue.last { it.fullName.isNotEmpty() && it.lastMessage.isNotEmpty()}
             }
         }
+
+
+    private fun getContactValueListener() = AppValueEventListener {
+        val contactValue = it.getDataModel<ContactUi>()
+        contacts.value = contactValue
+    }
 
     override fun onPause() {
         super.onPause()
         mapListener.forEach {
-            it.key.removeEventListener(refListener)
+            it.key.removeEventListener(it.value)
         }
     }
 }

@@ -31,7 +31,6 @@
                 android:id="@+id/leftMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:text="Привет! Как жизнь?"
@@ -39,7 +38,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +50,7 @@
                 android:text="16:15"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/leftMessage"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/leftMessage" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -78,14 +77,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:text="Привет! Как жизнь?"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,23 +91,23 @@
                 android:id="@+id/rightMessageTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="16:15"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/right_message_watched"
-                app:layout_constraintEnd_toStartOf="@+id/right_message_watched"
-                app:layout_constraintTop_toTopOf="@+id/right_message_watched" />
-
-            <ImageView
-                android:id="@+id/right_message_watched"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_baseline_done_all_24"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/rightMessage"
-                app:layout_constraintTop_toBottomOf="@+id/rightMessage"
-                app:tint="@color/white" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rightMessage" />
+
+<!--            <ImageView-->
+<!--                android:id="@+id/right_message_watched"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:src="@drawable/ic_baseline_done_all_24"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/rightMessage"-->
+<!--                app:tint="@color/white" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -114,7 +114,7 @@ private fun clickToMenuItem(menuItem: MenuItem, view: View) {
         R.id.nav_invite_people -> {
             // TODO: 12.05.2021 Переход на фрагмент для приглашения друзей
         }
-        R.id.nav_settings -> {
+        R.id.nav_exit -> {
             FirebaseProvider.authFirebase.signOut()
             UserStatus.updateUserStatus(UserStatus.OFFLINE)
             view.findNavController()
