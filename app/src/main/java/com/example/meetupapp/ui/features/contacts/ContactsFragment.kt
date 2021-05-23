@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meetupapp.R
 import com.example.meetupapp.databinding.FragmentContactsBinding
 import com.example.meetupapp.pojo.ContactUi
-import com.example.meetupapp.ui.recyclerViewAdapter.ContactAdapter
-import com.example.meetupapp.util.extensions.getDataModel
-import com.example.meetupapp.util.extensions.hide
-import com.example.meetupapp.util.firebase.FirebaseProvider.CURRENT_UID
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_PHONE_CONTACTS
-import com.example.meetupapp.util.extensions.show
-import com.example.meetupapp.util.firebase.AppValueEventListener
-import com.example.meetupapp.util.firebase.FirebaseProvider
-import com.example.meetupapp.util.firebase.FirebaseProvider.NODE_USERS
+import com.example.meetupapp.ui.adapters.ContactAdapter
+import com.example.meetupapp.utils.extensions.getDataModel
+import com.example.meetupapp.utils.extensions.hide
+import com.example.meetupapp.utils.firebase.FirebaseProvider.CURRENT_UID
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_PHONE_CONTACTS
+import com.example.meetupapp.utils.extensions.show
+import com.example.meetupapp.utils.firebase.AppValueEventListener
+import com.example.meetupapp.utils.firebase.FirebaseProvider
+import com.example.meetupapp.utils.firebase.FirebaseProvider.NODE_USERS
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.FragmentScoped
@@ -51,7 +51,7 @@ class ContactsFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_contacts, container, false)
 
         binding.contactsProgressBar.show()
-        initRecyclerView()
+        initContactData()
         initTopBarBackListener(binding)
         contacts.observe(viewLifecycleOwner) {
             updateRecyclerView(binding, it)
@@ -68,14 +68,13 @@ class ContactsFragment : Fragment() {
         contact.layoutManager = LinearLayoutManager(context)
         adapter = ContactAdapter(
             items = list,
-            activity = activity as AppCompatActivity,
             textView = binding.text
         )
         contact.adapter = adapter
         adapter.notifyDataSetChanged()
     }
 
-    private fun initRecyclerView() {
+    private fun initContactData() {
         CURRENT_UID?.let {
             val contactIdListener = getContactId()
             val refDatabase = FirebaseDatabase.getInstance().reference
@@ -92,7 +91,7 @@ class ContactsFragment : Fragment() {
                 dataSnapshot2?.let { data ->
                     val userId = data.getDataModel<ContactUi>()
                     val refDatabase =
-                        FirebaseProvider.referenceDatabase.child(NODE_USERS).child(userId?.id.orEmpty())
+                        FirebaseProvider.referenceDatabase.child(NODE_USERS).child(userId.id)
                     val contactsListener = getContactValueListener()
 
                     mapListener[refDatabase] = contactsListener
