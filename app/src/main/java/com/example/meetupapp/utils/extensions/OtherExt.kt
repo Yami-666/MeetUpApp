@@ -29,6 +29,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
+fun Int?.orZero(): Int {
+    return this ?: 0
+}
+
 inline fun <reified T, reified R> R.unsafeLazy(noinline init: () -> T): Lazy<T> {
     return lazy(LazyThreadSafetyMode.NONE, init)
 }
