@@ -35,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:inputType="phone"
                 android:longClickable="false"
-                android:text="+78005553535"
+                android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
